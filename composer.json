@@ -1,5 +1,5 @@
 {
-    "name": "philo/laravel-blade",
+    "name": "rezon73/laravel-blade",
     "description": "Use the simple and yet powerful Laravel Blade templating engine as a standalone component.",
     "keywords": ["laravel", "blade"],
     "license": "MIT",
@@ -10,8 +10,9 @@
         }
     ],
     "require": {
-        "illuminate/view": "~5",
-        "illuminate/events": "~5"
+        "illuminate/view": "~9.38",
+        "illuminate/events": "~9.38",
+        "php": ">=8.0"
     },
     "autoload": {
         "psr-4": {
