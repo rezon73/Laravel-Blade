@@ -27,21 +27,21 @@ class Blade {
 	public $cachePath;
 
 	/**
-	 * @var Illuminate\Container\Container
+	 * @var Container
 	 */
 	protected $container;
 
 	/**
-	 * @var Illuminate\View\Factory
+	 * @var Factory
 	 */
 	protected $instance;
 
-	/**
-	 * Initialize class
-	 * @param array  $viewPaths
-	 * @param string $cachePath
-	 * @param Illuminate\Events\Dispatcher $events
-	 */
+    /**
+     * Initialize class
+     * @param array $viewPaths
+     * @param string $cachePath
+     * @param Dispatcher|null $events
+     */
 	function __construct($viewPaths = array(), $cachePath, Dispatcher $events = null) {
 
 		$this->container = new Container;
@@ -61,19 +61,19 @@ class Blade {
 		$this->instance = $this->registerFactory();
 	}
 
-	public function view()
-	{
+	public function view(): ?Factory
+    {
 		return $this->instance;
 	}
 
-	public function registerFilesystem()
-	{
+	public function registerFilesystem(): void
+    {
 		$this->container->singleton('files', function(){
 			return new Filesystem;
 		});
 	}
-	public function registerEvents(Dispatcher $events)
-	{
+	public function registerEvents(Dispatcher $events): void
+    {
 		$this->container->singleton('events', function() use ($events)
 		{
 			return $events;
@@ -84,8 +84,8 @@ class Blade {
 	 *
 	 * @return void
 	 */
-	public function registerEngineResolver()
-	{
+	public function registerEngineResolver(): void
+    {
 		$me = $this;
 
 		$this->container->singleton('view.engine.resolver', function($app) use ($me)
@@ -107,22 +107,22 @@ class Blade {
 	/**
 	 * Register the PHP engine implementation.
 	 *
-	 * @param  \Illuminate\View\Engines\EngineResolver  $resolver
+	 * @param EngineResolver $resolver
 	 * @return void
 	 */
-	public function registerPhpEngine($resolver)
-	{
-		$resolver->register('php', function() { return new PhpEngine; });
+	public function registerPhpEngine($resolver): void
+    {
+		$resolver->register('php', function() { return new PhpEngine(new Filesystem()); });
 	}
 
 	/**
 	 * Register the Blade engine implementation.
 	 *
-	 * @param  \Illuminate\View\Engines\EngineResolver  $resolver
+	 * @param EngineResolver $resolver
 	 * @return void
 	 */
-	public function registerBladeEngine($resolver)
-	{
+	public function registerBladeEngine($resolver): void
+    {
 		$me = $this;
 		$app = $this->container;
 
@@ -147,8 +147,8 @@ class Blade {
 	 *
 	 * @return void
 	 */
-	public function registerViewFinder()
-	{
+	public function registerViewFinder(): void
+    {
 		$me = $this;
 		$this->container->singleton('view.finder', function($app) use ($me)
 		{
@@ -161,10 +161,10 @@ class Blade {
 	/**
 	 * Register the view environment.
 	 *
-	 * @return void
-	 */
-	public function registerFactory()
-	{
+	 * @return Factory
+     */
+	public function registerFactory(): Factory
+    {
 		// Next we need to grab the engine resolver instance that will be used by the
 		// environment. The resolver will be used by an environment to get each of
 		// the various engine implementations such as plain PHP or Blade engine.
